@@ -2,6 +2,7 @@
 
 pub mod prelude;
 
+pub mod knowledge_bases;
 pub mod tenants;
 pub mod user_tenant_memberships;
 pub mod users;
