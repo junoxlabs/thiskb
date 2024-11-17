@@ -1,6 +1,6 @@
-use thiskb::app::App;
 use loco_rs::testing;
 use serial_test::serial;
+use thiskb::app::App;
 
 #[tokio::test]
 #[serial]
@@ -14,4 +14,3 @@ async fn can_get_api_v1() {
     })
     .await;
 }
-

@@ -5,6 +5,5 @@ use loco_rs::prelude::*;
 // use axum::debug_handler;
 
 pub fn routes() -> Routes {
-    Routes::new()
-        .prefix("queries")
+    Routes::new().prefix("queries")
 }
