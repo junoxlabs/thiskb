@@ -44,7 +44,7 @@ impl Hooks for App {
             .add_route(controllers::tenant::routes())
             .add_route(controllers::user::routes())
             .add_route(controllers::document::routes())
-            .add_route(controllers::auth::routes())
+            .add_route(controllers::auth_api::routes())
     }
 
     async fn connect_workers(ctx: &AppContext, queue: &Queue) -> Result<()> {
