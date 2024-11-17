@@ -4,24 +4,31 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "knowledge_bases")]
+#[sea_orm(table_name = "documents")]
 pub struct Model {
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: DateTimeWithTimeZone,
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: Uuid,
     pub tenant_id: Uuid,
+    pub knowledge_base_id: Uuid,
     pub name: String,
-    #[sea_orm(column_type = "Text", nullable)]
-    pub description: Option<String>,
+    pub content_type: String,
+    pub file_size: Option<i64>,
     #[sea_orm(column_type = "JsonBinary", nullable)]
     pub metadata: Option<Json>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::documents::Entity")]
-    Documents,
+    #[sea_orm(
+        belongs_to = "super::knowledge_bases::Entity",
+        from = "Column::KnowledgeBaseId",
+        to = "super::knowledge_bases::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
+    KnowledgeBases,
     #[sea_orm(
         belongs_to = "super::tenants::Entity",
         from = "Column::TenantId",
@@ -32,9 +39,9 @@ pub enum Relation {
     Tenants,
 }
 
-impl Related<super::documents::Entity> for Entity {
+impl Related<super::knowledge_bases::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Documents.def()
+        Relation::KnowledgeBases.def()
     }
 }
 
