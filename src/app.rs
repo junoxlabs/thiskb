@@ -1,5 +1,3 @@
-use std::path::Path;
-
 use async_trait::async_trait;
 use loco_rs::{
     app::{AppContext, Hooks},
@@ -8,11 +6,13 @@ use loco_rs::{
     controller::AppRoutes,
     db::{self, truncate_table},
     environment::Environment,
+    storage::{drivers::aws, Storage},
     task::Tasks,
     Result,
 };
 use migration::Migrator;
 use sea_orm::DatabaseConnection;
+use std::path::Path;
 
 use crate::{controllers, models::_entities::users, tasks, workers::downloader::DownloadWorker};
 
@@ -54,6 +54,24 @@ impl Hooks for App {
     async fn truncate(db: &DatabaseConnection) -> Result<()> {
         truncate_table(db, users::Entity).await?;
         Ok(())
+    }
+
+    async fn after_context(ctx: AppContext) -> Result<AppContext> {
+        let aws_storage = aws::with_credentials(
+            "users",
+            "eu-central",
+            aws::Credential {
+                key_id: "access-key-id".to_string(),
+                secret_key: "secret-access-key".to_string(),
+                token: None,
+            },
+        )
+        .unwrap();
+
+        Ok(AppContext {
+            storage: Storage::single(aws_storage).into(),
+            ..ctx
+        })
     }
 
     async fn seed(db: &DatabaseConnection, base: &Path) -> Result<()> {
