@@ -49,9 +49,7 @@ enum KnowledgeBases {
     Name,
     Description,
     Metadata,
-    
 }
-
 
 #[derive(DeriveIden)]
 enum Tenants {

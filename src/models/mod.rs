@@ -1,6 +1,7 @@
 pub mod _entities;
-pub mod users;
-pub mod user_tenant_memberships;
-pub mod tenants;
-pub mod knowledge_bases;
+pub mod chunks;
 pub mod documents;
+pub mod knowledge_bases;
+pub mod tenants;
+pub mod user_tenant_memberships;
+pub mod users;

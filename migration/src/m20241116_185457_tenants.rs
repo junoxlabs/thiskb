@@ -36,7 +36,5 @@ enum Tenants {
     Table,
     Id,
     Name,
-    Metadata, 
+    Metadata,
 }
-
-

@@ -15,15 +15,17 @@ impl MigrationTrait for Migration {
                             .name("idx-user_tenant_memberships-refs-pk")
                             .table(UserTenantMemberships::Table)
                             .col(UserTenantMemberships::TenantId)
-                            .col(UserTenantMemberships::UserId)
-                            ,
+                            .col(UserTenantMemberships::UserId),
                     )
                     .col(uuid(UserTenantMemberships::TenantId))
                     .col(integer(UserTenantMemberships::UserId))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-user_tenant_memberships-tenants")
-                            .from(UserTenantMemberships::Table, UserTenantMemberships::TenantId)
+                            .from(
+                                UserTenantMemberships::Table,
+                                UserTenantMemberships::TenantId,
+                            )
                             .to(Tenants::Table, Tenants::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
@@ -53,9 +55,7 @@ enum UserTenantMemberships {
     Table,
     TenantId,
     UserId,
-    
 }
-
 
 #[derive(DeriveIden)]
 enum Tenants {

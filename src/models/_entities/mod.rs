@@ -2,6 +2,7 @@
 
 pub mod prelude;
 
+pub mod chunks;
 pub mod documents;
 pub mod knowledge_bases;
 pub mod tenants;

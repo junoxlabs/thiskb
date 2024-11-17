@@ -1,6 +1,6 @@
-use thiskb::app::App;
 use loco_rs::testing;
 use serial_test::serial;
+use thiskb::app::App;
 
 macro_rules! configure_insta {
     ($($expr:expr),*) => {
