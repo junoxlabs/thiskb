@@ -5,3 +5,5 @@ pub mod document;
 pub mod query;
 pub mod tenant;
 pub mod user;
+
+pub mod home;

@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use loco_rs::{
-    app::{AppContext, Hooks},
+    app::{AppContext, Hooks, Initializer},
     bgworker::{BackgroundWorker, Queue},
     boot::{create_app, BootResult, StartMode},
     controller::AppRoutes,
@@ -14,7 +14,9 @@ use migration::Migrator;
 use sea_orm::DatabaseConnection;
 use std::path::Path;
 
-use crate::{controllers, models::_entities::users, tasks, workers::downloader::DownloadWorker};
+use crate::{
+    controllers, initializers, models::_entities::users, tasks, workers::downloader::DownloadWorker,
+};
 
 pub struct App;
 #[async_trait]
@@ -33,12 +35,22 @@ impl Hooks for App {
         )
     }
 
+    async fn initializers(_ctx: &AppContext) -> Result<Vec<Box<dyn Initializer>>> {
+        let initializers: Vec<Box<dyn Initializer>> = vec![Box::new(
+            // template engine initializer
+            initializers::template_engine::TemplateEngineInitializer,
+        )];
+
+        Ok(initializers)
+    }
+
     async fn boot(mode: StartMode, environment: &Environment) -> Result<BootResult> {
         create_app::<Self, Migrator>(mode, environment).await
     }
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
         AppRoutes::with_default_routes() // controller routes below
+            .add_route(controllers::home::routes())
             .add_route(controllers::api::routes())
             .add_route(controllers::query::routes())
             .add_route(controllers::tenant::routes())
