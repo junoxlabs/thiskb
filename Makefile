@@ -1,6 +1,6 @@
 # Define variables
 CARGO = cargo
-RUSTFLAGS = --all-features
+RUSTFLAGS = 
 PROJECT_NAME = thiskb
 
 # Default target
@@ -11,18 +11,24 @@ default: build
 .PHONY: r
 r: dev
 .PHONY: c
-c: check fmt
+c: check fmt b
 .PHONY: fmt
 fmt: format clippy
+.PHONY: b
+b: bacon
 
 # Development target
 .PHONY: dev
 dev:
-	$(CARGO) r $(RUSTFLAGS) watch
+	cargo r $(RUSTFLAGS) watch
 
 .PHONY: check
 check:
 	$(CARGO) check $(RUSTFLAGS)
+
+.PHONY: bacon
+bacon:
+	bacon
 
 # Build target
 .PHONY: build
