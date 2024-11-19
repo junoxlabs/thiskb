@@ -5,9 +5,8 @@ use axum::debug_handler;
 use loco_rs::prelude::*;
 
 #[debug_handler]
-async fn index() -> Result<Response> {
-    // format::template("home/index", )
-    format::empty_json()
+async fn index(ViewEngine(v): ViewEngine<TeraView>) -> Result<Response> {
+    format::render().view(&v, "home/index.html", data!({}))
 }
 
 pub fn routes() -> Routes {
