@@ -3,32 +3,26 @@
 {% block content %}
 
 <div>
-    <form class="uk-form-stacked" hx-post="/login" hx-target="#login-result">
+    <form hx-post="{{ post_url }}" hx-disabled-elt="find #submit" hx-target="#login-result" hx-swap="innerHTML" class="uk-form-stacked">
+        <div id="login-result" class="uk-margin"></div>
+        
         <div class="uk-margin">
-            <label class="uk-form-label" for="username">Username</label>
+            <label class="uk-form-label" for="email">Email</label>
             <div class="uk-form-controls">
-                <div class="uk-inline">
-                    <span class="uk-form-icon" uk-icon="icon: user"></span>
-                    <input class="uk-input" id="username" type="text" placeholder="Enter your username" name="username" aria-label="Username" required>
-                </div>
+                <input class="uk-input" id="email" type="email" placeholder="Enter your email" name="email" aria-label="Email" required>
             </div>
         </div>
     
         <div class="uk-margin">
             <label class="uk-form-label" for="password">Password</label>
             <div class="uk-form-controls">
-                <div class="uk-inline">
-                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-                    <input class="uk-input" id="password" type="password" placeholder="Enter your password" name="password" aria-label="Password" required>
-                </div>
+                <input class="uk-input" id="password" type="password" placeholder="Enter your password" name="password" aria-label="Password" required>
             </div>
         </div>
     
         <div class="uk-margin">
-            <button class="uk-button uk-button-primary" type="submit">Login</button>
-        </div>
-    
-        <div id="login-result" class="uk-margin uk-text-danger"></div>
+            <button id="submit" class="uk-button uk-button-primary" type="submit">Login</button>
+        </div> 
     </form>
 </div>
 

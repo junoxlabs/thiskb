@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div>
+    <form hx-post="{{ post_url }}" hx-disabled-elt="find #submit" hx-target="#register-response" hx-swap="innerHTML" class="uk-form-stacked">
+        <h2>Register</h2>
+        
+        <div id="register-response" class="uk-margin"></div>
+        
+        <div class="uk-margin">
+            <label class="uk-form-label" for="email">Email</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="email" name="email" type="email" placeholder="Enter your email" required>
+            </div>
+        </div>
+        
+        <div class="uk-margin">
+            <label class="uk-form-label" for="password">Password</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="password" name="password" type="password" placeholder="Create a password" required>
+            </div>
+        </div>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="name">Name</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="name" name="name" type="text" placeholder="Enter your name" required>
+            </div>
+        </div>
+        
+        <div class="uk-margin" >
+            <button id="submit" class="uk-button uk-button-primary" type="submit">Register</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
