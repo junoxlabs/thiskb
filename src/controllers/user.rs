@@ -3,6 +3,7 @@
 #![allow(clippy::unused_async)]
 use auth::JWTWithUser;
 use axum::{debug_handler, http::StatusCode, Form};
+
 use loco_rs::prelude::*;
 use std::collections::HashMap;
 use std::sync::OnceLock;
@@ -117,7 +118,7 @@ pub async fn do_login(
         true => {
             let jwt_secret = ctx.config.get_jwt_config()?;
 
-            let _token = match user.generate_jwt(&jwt_secret.secret, &jwt_secret.expiration) {
+            let token = match user.generate_jwt(&jwt_secret.secret, &jwt_secret.expiration) {
                 Ok(token) => token,
                 Err(err) => {
                     // debug tracing
@@ -134,11 +135,21 @@ pub async fn do_login(
                 }
             };
 
-            // !TODO: add user to session and redirect to profile page
+            // !TODO: get cookie name from config file automatically
+            let cookie = cookie::Cookie::build(("jwt", token))
+                .http_only(true)
+                .path("/")
+                .same_site(cookie::SameSite::Strict)
+                .max_age(time::Duration::minutes(60));
+
             Ok((
                 StatusCode::SEE_OTHER, // 303 See Other
-                // redirect to login page using htmx redirect header
-                [("HX-Redirect", get_routes_with_prefix("profile"))],
+                [
+                    // set auth jwt cookie
+                    ("Set-Cookie", cookie.to_string()),
+                    // redirect to login page using htmx redirect header
+                    ("HX-Redirect", get_routes_with_prefix("profile")),
+                ],
             )
                 .into_response())
         }
@@ -237,8 +248,26 @@ pub async fn forgot_password(ViewEngine(v): ViewEngine<TeraView>) -> Result<Resp
 
 // !GET logout page route
 #[debug_handler]
-pub async fn logout(ViewEngine(v): ViewEngine<TeraView>) -> Result<Response> {
-    format::render().view(&v, "user/index.html", data!({}))
+pub async fn logout(
+    _auth: JWTWithUser<users::Model>,
+    State(_ctx): State<AppContext>,
+) -> Result<Response> {
+    let cookie = cookie::Cookie::build(("jwt", ""))
+        .http_only(true)
+        .path("/")
+        .same_site(cookie::SameSite::Strict)
+        .max_age(time::Duration::minutes(0));
+
+    Ok((
+        StatusCode::TEMPORARY_REDIRECT, // 307 Temporary Redirect
+        [
+            // set auth jwt cookie
+            ("Set-Cookie", cookie.to_string()),
+            // redirect to login page using htmx redirect header
+            ("Location", get_routes_with_prefix("login")),
+        ],
+    )
+        .into_response())
 }
 
 // !### --- end auth routes --- ### //

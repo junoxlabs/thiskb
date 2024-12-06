@@ -89,3 +89,7 @@ auth:
     secret: UzjvgMamJ8Vjanhkw8uJ
     # Token expiration time in seconds
     expiration: 604800 # 7 days
+    # Cookie name
+    location: 
+      from: Cookie 
+      name: jwt
