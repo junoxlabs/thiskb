@@ -22,10 +22,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    ### djapps ###
     "tenants",
     "users",
     "knowledge_bases",
     "documents",
+    ### end djapps ###
+    ### django allauth ###
+    "allauth",
+    "allauth.account",
+    "allauth.usersessions",
+    ### end django allauth ###
 ]
 
 MIDDLEWARE = [
@@ -36,6 +44,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",  ### django allauth ###
 ]
 
 ROOT_URLCONF = "thiskb.urls"
@@ -94,6 +103,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "users.User"
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by email
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+LOGIN_REDIRECT_URL = "/users/profile/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
