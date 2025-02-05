@@ -110,7 +110,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-LOGIN_REDIRECT_URL = "/users/profile/"
+LOGIN_REDIRECT_URL = "/dashboard/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
