@@ -1,0 +1,49 @@
+{% load i18n %}
+<header>
+    <div class="uk-navbar-container">
+        <div class="uk-container">
+            <nav uk-navbar class="uk-padding-remove-vertical">
+                <div class="uk-navbar-left">
+                    <a href="/" class="uk-logo uk-text-primary">thiskb</a>
+                </div>
+
+                <!-- menu links -->
+                <div class="uk-navbar-right">
+                    <ul class="uk-navbar-nav">
+                        <!-- if user auth --> 
+                        {% if user.is_authenticated %} 
+
+                        <!-- user dashboard -->
+                        <li>
+                            <a class="uk-text-lowercase" href="/dashboard">{% trans "Dashboard" %}</a>
+                        </li>
+
+                        {% url 'account_logout' as logout_url_ %} 
+                        <li>
+                            <a class="uk-text-lowercase" href="{{ logout_url_ }}">{% trans "Sign Out" %}</a>
+                        </li>
+                        {% endif %}
+
+                        <!-- if user not auth -->  
+                        {% if not user.is_authenticated %} {% url 'account_login' as login_url_ %} 
+                            {% if login_url_ %}
+                            <li>
+                                <a class="uk-text-lowercase" href="{{ login_url_ }}">{% trans "Sign In" %}</a>
+                            </li>
+                            {% endif %}
+
+                            {% url 'account_signup' as signup_url_ %}
+                            {% if signup_url_ %}
+                            <li>
+                                <a class="uk-text-lowercase" href="{{ signup_url_ }}">{% trans "Sign Up" %}</a>
+                            </li>
+                            {% endif %}
+
+                        {% endif %}
+                    </ul>
+                </div>
+                <!-- / end menu links -->
+            </nav>
+        </div>
+    </div>
+</header>

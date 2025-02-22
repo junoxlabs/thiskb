@@ -11,18 +11,39 @@
     <!-- / UIkit CSS -->
 
     <!-- HTMX 2.0.3 -->
-    <script defer src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/htmx.org@2.0.3"
+        integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+        crossorigin="anonymous"></script>
     <!-- / HTMX -->
-
+    <title>
+        {% block head_title %}
+        {% endblock head_title %}
+    </title>
+    {% block extra_head %}
+    {% endblock extra_head %}
 </head>
+
 <body class="uk-container">
 
+    <!-- navbar / header -->
+    {% include "includes/header.html" %}
+    <!-- end navbar / header -->
 
     <!-- main content -->
-    <main id="main" class="uk-container">
+    <main id="main" class="uk-container uk-margin uk-padding-small">
+        <!-- allauth body -->
+        {% block body %} {% endblock body %}
+        
         <!--main content block-->
         {% block content %} {% endblock content %}
+
+        <!-- allauth extra body -->
+        {% block extra_body %} {% endblock extra_body %}
     </main>
+
+    <!-- footer -->
+    {% include "includes/footer.html" %}
+    <!-- end footer -->
 
     <!-- UIkit JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/uikit@3.21.13/dist/js/uikit.min.js"></script>
@@ -30,4 +51,5 @@
     <!-- / UIkit JS -->
 
 </body>
+
 </html>
