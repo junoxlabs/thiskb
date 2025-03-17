@@ -20,15 +20,11 @@ b: bacon
 # Development target
 .PHONY: dev
 dev:
-	cargo r $(RUSTFLAGS) watch
+	uv run --env-file .env manage.py runserver
 
 .PHONY: check
 check:
 	$(CARGO) check $(RUSTFLAGS)
-
-.PHONY: bacon
-bacon:
-	bacon
 
 # Build target
 .PHONY: build

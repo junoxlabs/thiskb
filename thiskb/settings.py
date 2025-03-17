@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "users",
     "knowledge_bases",
     "documents",
+    "dashboard",
     ### end djapps ###
     ### django allauth ###
     "allauth",

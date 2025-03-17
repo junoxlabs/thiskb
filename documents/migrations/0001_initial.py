@@ -9,40 +9,83 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('knowledge_bases', '0001_initial'),
-        ('tenants', '0002_initial'),
+        ("knowledge_bases", "0001_initial"),
+        ("tenants", "0002_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Document',
+            name="Document",
             fields=[
-                ('id', models.UUIDField(default=uuid_utils.compat.uuid7, editable=False, primary_key=True, serialize=False)),
-                ('name', models.TextField()),
-                ('content_type', models.TextField()),
-                ('file_size', models.BigIntegerField()),
-                ('metadata', models.JSONField()),
-                ('total_chunks', models.IntegerField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('kb', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='knowledge_bases.knowledgebase')),
-                ('tenant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tenants.tenant')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid_utils.compat.uuid7,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.TextField()),
+                ("content_type", models.TextField()),
+                ("file_size", models.BigIntegerField()),
+                ("metadata", models.JSONField()),
+                ("total_chunks", models.IntegerField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "kb",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="knowledge_bases.knowledgebase",
+                    ),
+                ),
+                (
+                    "tenant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="tenants.tenant"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Chunk',
+            name="Chunk",
             fields=[
-                ('id', models.UUIDField(default=uuid_utils.compat.uuid7, editable=False, primary_key=True, serialize=False)),
-                ('content', models.TextField()),
-                ('embedding', pgvector.django.vector.VectorField(dimensions=1536)),
-                ('chunk_number', models.IntegerField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('kb', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='knowledge_bases.knowledgebase')),
-                ('tenant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tenants.tenant')),
-                ('document', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='documents.document')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid_utils.compat.uuid7,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("content", models.TextField()),
+                ("embedding", pgvector.django.vector.VectorField(dimensions=1536)),
+                ("chunk_number", models.IntegerField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "kb",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="knowledge_bases.knowledgebase",
+                    ),
+                ),
+                (
+                    "tenant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="tenants.tenant"
+                    ),
+                ),
+                (
+                    "document",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="documents.document",
+                    ),
+                ),
             ],
         ),
         migrations.RunSQL(
@@ -58,11 +101,19 @@ class Migration(migrations.Migration):
             """
         ),
         migrations.AddIndex(
-            model_name='document',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['metadata'], name='documents_d_metadat_49c69d_gin'),
+            model_name="document",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["metadata"], name="documents_d_metadat_49c69d_gin"
+            ),
         ),
         migrations.AddIndex(
-            model_name='chunk',
-            index=pgvector.django.indexes.HnswIndex(ef_construction=64, fields=['embedding'], m=16, name='chunks_embedding_idx', opclasses=['vector_cosine_ops']),
+            model_name="chunk",
+            index=pgvector.django.indexes.HnswIndex(
+                ef_construction=64,
+                fields=["embedding"],
+                m=16,
+                name="chunks_embedding_idx",
+                opclasses=["vector_cosine_ops"],
+            ),
         ),
     ]

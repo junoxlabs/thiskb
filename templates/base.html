@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- UIkit CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.13/dist/css/uikit.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.23.1/dist/css/uikit.min.css" />
     <!-- / UIkit CSS -->
 
     <!-- HTMX 2.0.3 -->
@@ -15,6 +15,11 @@
         integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
         crossorigin="anonymous"></script>
     <!-- / HTMX -->
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    <!-- / Alpine.js -->
+
     <title>
         {% block head_title %}
         {% endblock head_title %}
@@ -33,7 +38,7 @@
     <main id="main" class="uk-container uk-margin uk-padding-small">
         <!-- allauth body -->
         {% block body %} {% endblock body %}
-        
+
         <!--main content block-->
         {% block content %} {% endblock content %}
 
@@ -46,8 +51,8 @@
     <!-- end footer -->
 
     <!-- UIkit JS -->
-    <script defer src="https://cdn.jsdelivr.net/npm/uikit@3.21.13/dist/js/uikit.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/uikit@3.21.13/dist/js/uikit-icons.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/uikit@3.23.1/dist/js/uikit.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/uikit@3.23.1/dist/js/uikit-icons.min.js"></script>
     <!-- / UIkit JS -->
 
 </body>

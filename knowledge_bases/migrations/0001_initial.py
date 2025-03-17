@@ -6,23 +6,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('tenants', '0002_initial'),
+        ("tenants", "0002_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='KnowledgeBase',
+            name="KnowledgeBase",
             fields=[
-                ('id', models.UUIDField(default=uuid_utils.compat.uuid7, editable=False, primary_key=True, serialize=False)),
-                ('name', models.TextField()),
-                ('description', models.TextField()),
-                ('metadata', models.JSONField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('tenant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tenants.tenant')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid_utils.compat.uuid7,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.TextField()),
+                ("description", models.TextField()),
+                ("metadata", models.JSONField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "tenant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="tenants.tenant"
+                    ),
+                ),
             ],
         ),
     ]

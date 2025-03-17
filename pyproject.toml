@@ -25,4 +25,10 @@ dependencies = [
     "sentry-sdk[django]==2.20.0",
     "uuid-utils>=0.10.0",
     "whitenoise==6.8.2",
+    "magika==0.5.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.7",
 ]
