@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="uk-container uk-flex">
+    <!-- dash nav -->
+    <div class="">
+        <div class="uk-nav uk-flex-left uk-margin-right" hx-boost="true">
+            <li>
+                <a href="{% url 'dashboard:home' %}">home</a>
+            </li>
+            <li>
+                <a href="{% url 'dashboard:knowledge-bases' %}">knowledge bases</a>
+            </li>
+            <li>
+                <a href="">documents</a>
+            </li>
+        </div>
+    </div>
+
+    <!-- main dashboard content -->
+    <div class="uk-width-expand uk-padding-small uk-padding-remove-vertical" hx-boost="true">
+        {% block dashboard %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

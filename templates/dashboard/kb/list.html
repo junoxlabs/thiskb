@@ -1,0 +1,51 @@
+{% extends "dashboard/dashboard.html" %}
+{% load kb_tags %}
+
+{% block dashboard %}
+<div class="uk-flex uk-flex-between uk-flex-center">
+    <h2>knowledge bases</h2>
+
+    <div>
+        {% if current_tenant.role|can_create_kb %}
+        <a href="{% url 'dashboard:knowledge-base-create' %}" class="uk-button uk-button-primary">new knowledge
+            base</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Show current tenant info -->
+<div class="uk-margin uk-flex uk-flex-column">
+    <div class="uk-text-muted">Current Tenant: {{ current_tenant.name }}</div>
+    <div class="uk-text-muted">Settings: <a href="/dashboard/tenants/{{ current_tenant.id }}">edit</a></div>
+    <div class="uk-text-muted">Role: {{ current_tenant.role }}</div>
+</div>
+
+<!-- List knowledge bases -->
+{% if knowledge_bases %}
+<div class="uk-grid uk-child-width-1-3@m" uk-grid>
+    {% for kb in knowledge_bases %}
+    <div>
+        <div class="uk-card uk-card-default uk-card-body">
+            <h3 class="uk-card-title">{{ kb.name }}</h3>
+            <p>{{ kb.description|truncatewords:30 }}</p>
+            <a href="{% url 'dashboard:knowledge-base-detail' kb.id %}"
+                class="uk-margin-bottom uk-button uk-button-primary uk-button-small">View</a>
+            <div class="uk-text-meta">
+                Created on {{ kb.created_at|date:"M d, Y" }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="uk-alert uk-alert-warning">
+    <p>
+        No knowledge bases found for this organization.
+    </p>
+
+    {% if current_tenant.role|can_create_kb %}
+    <a href="{% url 'dashboard:knowledge-base-create' %}">Create a new knowledge base.</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

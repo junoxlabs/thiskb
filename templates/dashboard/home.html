@@ -1,0 +1,13 @@
+{% extends "dashboard/dashboard.html" %}    
+
+{% block dashboard %}
+<h2>Welcome, {{ user.username }}!</h2>
+    
+    <div class="profile-section">
+        <h2>Your Profile</h2>
+        <p>Email: {{ user.email }}</p>
+        <p>Bio: {{ user_dashboard.bio|default:"No bio yet" }}</p>
+        <p>Member since: {{ user.date_joined|date }}</p>
+        <p>Last login: {{ user.last_login|date:"M j, Y, H:i T" }}</p>
+    </div>
+{% endblock %}
