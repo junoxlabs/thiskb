@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0](https://github.com/fivehanz/thiskb/compare/v0.2.0...v0.3.0) (2025-03-17)
+
+
+### Features
+
+* dashboard ([9d3bbf6](https://github.com/fivehanz/thiskb/commit/9d3bbf6504c895052a643b9750f2c6305d522535))
+* navbar + conditional login/logout menu ([4252c11](https://github.com/fivehanz/thiskb/commit/4252c11321e45f47f4e67f947d6ae70310961604))
+* pivot to django + python ecosystem ([b99bb07](https://github.com/fivehanz/thiskb/commit/b99bb0741451c914f2f190b80d99998f91f7859a))
+* pivot to django + python ecosystem ([63b7e42](https://github.com/fivehanz/thiskb/commit/63b7e426a934a6266c5ab5f24cc91e5e8dac4998))
+* update pydantic ai 0.0.20; django-allauth ([e56fe88](https://github.com/fivehanz/thiskb/commit/e56fe88e9c99d5945181bc5bc6a31092bc6b846a))
+* user auth w/ django allauth ([6c09820](https://github.com/fivehanz/thiskb/commit/6c098208f8e91dd3ef8ec1c8e3c6731461413058))
+
+
+### Bug Fixes
+
+* templates dir working ([c84575b](https://github.com/fivehanz/thiskb/commit/c84575bd8a3f5e9b5b9f910f2d6399ff96a35971))
+
 ## [0.2.0](https://github.com/fivehanz/thiskb/compare/v0.1.0...v0.2.0) (2025-01-19)
 
 
