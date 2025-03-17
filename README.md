@@ -4,29 +4,33 @@ thisKB is a personal knowledge base application that allows you to manage docume
 
 ## Overview
 
-thisKB enables users to upload and store documents, parse them for meaningful content, and then perform advanced searches.
-
-It integrates with **PostgreSQL** for user and metadata management, and **ParadeDB** for storing parsed documents and embeddings, providing fast and scalable search capabilities.
+thisKB enables users to upload and store documents, parse them for meaningful content, and then perform advanced searches and tasks. It provides a simple interface for document management with powerful search capabilities under the hood.
 
 ## Features
 
-- **Document Upload**: Upload documents and manage metadata.
-- **Document Parsing**: Automatically parse content from uploaded documents.
-- **Semantic Search**: Search documents using both text-based (BM25) and semantic (vector) search techniques.
-- **Scalability**: Built to scale with multi-tenant support.
+- **Document Upload**: Upload documents through UI and API
+- **Document Parsing**: Automatically extract meaningful content from various document formats
+- **Semantic Search**: Search documents using both text-based and semantic vector search
+- **Multi-lingual Support**: Process and search documents in multiple languages
+- **Chat Interface**: Interact with your knowledge base conversationally
 
 ## Tech Stack
 
-- **Backend**: Rust, powered by the **loco.rs** MVC framework.
+- **Backend**: Django with Pydantic AI
+- **Frontend**: HTMX + UIkit for a responsive interface
 - **Databases**:
-  - **PostgreSQL** for user data and metadata.
-  - **ParadeDB** for storing parsed documents and embeddings (with **pgvector** for vector search).
-- **Search**: **BM25** for text search, **pgvector** for semantic search.
-- **(temp) File Storage**: **AWS S3** (or **MinIO**) for document storage.
-- **Caching**: **Redis** for caching search results.
-- **Document Parsing**: **unstructured.io** for extracting meaningful content from documents.
+  - **PostgreSQL/ParadeDB** for data storage with pg_search and pgvector
+- **Processing**:
+  - **Celery + Redis** for task management and caching
+  - **Extractous** (Rust-based), **Marker** (PDF), and **Magika** for file processing
+- **Embeddings**:
+  - **Jina Embeddings v3** (1024 dimensions, multilingual)
+  - **OpenAI text-embedding-3-small** (1536 dimensions)
+- **Chunking**: Chonkie for semantic chunking (and with double-pass merging)
+- **Web Scraping**: crawl4ai, Jina Reader API/LLM
+- **Storage**: S3/MinIO for document storage
 
-## Installation
+## Basic Installation
 
 1. Clone the repository:
 
@@ -35,30 +39,72 @@ It integrates with **PostgreSQL** for user and metadata management, and **Parade
    cd thiskb
    ```
 
-2. Install dependencies:
+2. Set up a virtual environment and install dependencies with uv:
 
    ```bash
-   cargo build
+   uv venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   uv pip install -e .
    ```
 
-3. Set up the environment variables in `.env`:
+3. Set up environment variables in `.env`:
 
    ```env
    DATABASE_URL=postgres://user:password@localhost/thiskb
-   PARADEDB_URL=paradedb://user:password@localhost/thiskb
    REDIS_URL=redis://localhost:6379
+   S3_BUCKET=thiskb
+   S3_ENDPOINT=http://localhost:9000
+   S3_ACCESS_KEY=minioadmin
+   S3_SECRET_KEY=minioadmin
    ```
 
 4. Run migrations:
 
    ```bash
-   cargo migrate
+   python manage.py migrate
    ```
 
-5. Start the app:
+5. Start the development server:
+
    ```bash
-   cargo run
+   python manage.py runserver
    ```
+
+6. In a separate terminal, start Celery worker:
+
+   ```bash
+   celery -A thiskb worker --loglevel=info
+   ```
+
+## Installation with Docker (docker compose)
+
+*[To be added]*
+
+## Development
+
+### Running Tests
+
+```bash
+python manage.py test
+```
+
+### Code Formatting
+
+```bash
+ruff format .
+```
+
+## API Documentation
+
+API documentation is available at `/api/docs` when the server is running.
+
+## Deployment
+
+*[To be added]*
+
+## Contributing
+
+*[To be added]*
 
 ## License
 
