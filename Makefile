@@ -20,7 +20,7 @@ b: bacon
 # Development target
 .PHONY: dev
 dev:
-	uv run --env-file .env manage.py runserver
+	docker compose -f ./docker-compose.dev.yml up
 
 .PHONY: check
 check:
