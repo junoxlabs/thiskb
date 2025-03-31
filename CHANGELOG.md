@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/junoxlabs/thiskb/compare/v0.3.0...v0.4.0) (2025-03-31)
+
+
+### Features
+
+* use docker compose for dev ([49bc354](https://github.com/junoxlabs/thiskb/commit/49bc35485603e75de6d799c60755fece98ac8e4f))
+
 ## [0.3.0](https://github.com/fivehanz/thiskb/compare/v0.2.0...v0.3.0) (2025-03-17)
 
 
