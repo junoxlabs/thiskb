@@ -26,6 +26,7 @@ dependencies = [
     "uuid-utils>=0.10.0",
     "whitenoise==6.8.2",
     "magika==0.5.1",
+    "django-storages[s3]>=1.14.5",
 ]
 
 [dependency-groups]
