@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import dj_database_url
+from django.conf.global_settings import STORAGES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -133,6 +134,7 @@ STATIC_URL = "static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Email Configuration
@@ -145,3 +147,24 @@ EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "False").lower() == "true"
 EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "False").lower() == "true"
 EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", 60))
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@thiskb.local")
+
+# Storage Configuration for Django 5.1
+STORAGES["default"] = {
+    "BACKEND": "storages.backends.s3.S3Storage",
+    "OPTIONS": {
+        "access_key": os.environ.get("S3_ACCESS_KEY", "minioadmin"),
+        "secret_key": os.environ.get("S3_SECRET_KEY", "minioadmin"),
+        "bucket_name": os.environ.get("S3_BUCKET", "thiskb"),
+        "endpoint_url": os.environ.get("S3_ENDPOINT", "http://localhost:9000"),
+        "object_parameters": {
+            "CacheControl": "max-age=86400",
+        },
+        "default_acl": "private",
+        "querystring_auth": True,
+        "file_overwrite": False,
+    },
+}
+
+# Add storages to INSTALLED_APPS if not already there
+if "storages" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("storages")

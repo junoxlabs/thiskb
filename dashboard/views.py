@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from documents.models import Document
 from typing import BinaryIO
 from magika import Magika
+from documents.utils import DocumentChunkingStatus
 
 
 class DashboardBaseView(LoginRequiredMixin):
@@ -143,8 +144,11 @@ class KnowledgeBaseDetailView(DashboardBaseView, TemplateView):
 
 ### Documents ###
 class DocumentCreateView(DashboardBaseView, TemplateView):
-    CHUNK_SIZE = 8192  # 8KB chunks for detection
-    MAX_READ_SIZE = 131072  # 128KB max for type detection
+    # Standard file path template for document storage
+    DOCUMENT_PATH_TEMPLATE = "documents/{tenant_id}/{kb_id}/{document_id}.{extension}"
+
+    CHUNK_SIZE = 32768  # 32KB chunks for detection
+    MAX_READ_SIZE = 262144  # 256KB max for type detection
     SUPPORTED_MIME_TYPES = [
         "text/plain",
         "application/pdf",
@@ -186,6 +190,51 @@ class DocumentCreateView(DashboardBaseView, TemplateView):
             "group": result.output.group,
         }
 
+    def save_document_file(self, document: Document, file):
+        """
+        Save a document file using the standard path template
+
+        Args:
+            document: Document model instance
+            file: File object from request.FILES
+
+        Returns:
+            The path where the file was stored
+        """
+        from django.core.files.storage import default_storage
+        from django.core.files.base import ContentFile
+
+        # Extract file extension
+        file_extension = file.name.split(".")[-1] if "." in file.name else ""
+
+        # Generate the file path using the template
+        file_path = self.DOCUMENT_PATH_TEMPLATE.format(
+            tenant_id=document.tenant.id,
+            kb_id=document.kb.id,
+            document_id=document.id,
+            extension=file_extension,
+        )
+
+        # Save the file to storage
+        return default_storage.save(file_path, ContentFile(file.read()))
+
+    def process_document(self, document: Document, stored_path: str):
+        """
+        Process the document after it has been uploaded
+
+        Args:
+            document: Document model instance
+            stored_path: Path where the file is stored in S3/storage
+        """
+        from documents.tasks import process_document_task
+
+        # Schedule document processing task using the document's ID
+        process_document_task.delay(document_id=document.id, stored_path=stored_path)
+
+        # Update document with scheduled status
+        document.chunking_status = DocumentChunkingStatus.SCHEDULED
+        document.save(update_fields=["chunking_status"])
+
     def post(self, request, *args, **kwargs):
         kb = get_object_or_404(KnowledgeBase, id=kwargs["knowledge_base_id"])
         files = request.FILES.getlist("documents")
@@ -208,7 +257,7 @@ class DocumentCreateView(DashboardBaseView, TemplateView):
 
             # Create document instance
             try:
-                Document.objects.create(
+                document = Document.objects.create(
                     tenant=self.request.user.default_tenant,
                     kb=kb,
                     name=file.name,
@@ -217,17 +266,26 @@ class DocumentCreateView(DashboardBaseView, TemplateView):
                     metadata={
                         "mime_type": file_info["mime_type"],
                         "confidence": file_info["confidence"],
+                        "s3": {},
                     },
-                    total_chunks=0,  # Will be updated during processing
                 )
+
+                # upload files to s3 (in memory to s3)
+                stored_path = self.save_document_file(document, file)
+
+                # Update the document with the file path
+                document.metadata["s3"]["path"] = stored_path
+                document.save(update_fields=["metadata"])
+
+                # print(f"Document {document.id} saved to {stored_path}")
+
+                # schedule document for processing
+                self.process_document(document, stored_path)
 
             except Exception as e:
                 messages.error(request, f"Error creating document: {str(e)}")
+                # TODO: send error back to user with htmx
                 continue
-
-            # TODO: upload files to s3 (in memory to s3)
-
-            # TODO: schedule file processing logic here
 
         if request.headers.get("HX-Request"):
             messages.success(request, f"{len(files)} documents uploaded successfully")
