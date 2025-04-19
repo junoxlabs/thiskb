@@ -2,6 +2,7 @@ from django.db import models
 import uuid_utils.compat as uuid
 from django.contrib.postgres.indexes import GinIndex
 from pgvector.django import VectorField, HnswIndex
+from documents.utils import DocumentChunkingStatus
 
 
 class Document(models.Model):
@@ -12,7 +13,13 @@ class Document(models.Model):
     content_type = models.TextField(null=False)
     file_size = models.BigIntegerField()
     metadata = models.JSONField()
-    total_chunks = models.IntegerField()
+    chunking_status = models.CharField(
+        max_length=20,
+        choices=DocumentChunkingStatus.choices(),
+        default=DocumentChunkingStatus.PENDING,
+    )
+    chunking_error = models.TextField(null=True)
+    total_chunks = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
