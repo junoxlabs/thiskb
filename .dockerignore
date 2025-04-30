@@ -1,5 +1,12 @@
+**/__pycache__
+**/.git
+**/.venv
+**/node_modules
+**/.env
 target
 dockerfile
 .dockerignore
 .git
 .gitignore
+.venv
+.ruff_cache

@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 # Define variables
 CARGO = cargo
 RUSTFLAGS = 
@@ -20,7 +22,10 @@ b: bacon
 # Development target
 .PHONY: dev
 dev:
-	docker compose -f ./docker-compose.dev.yml up --build
+	docker compose -f ./docker-compose.dev.yml up 
+
+dev--build:
+	docker compose -f ./docker-compose.dev.yml up --build 
 
 .PHONY: check
 check:

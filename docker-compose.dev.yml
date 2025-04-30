@@ -1,24 +1,31 @@
-version: '3.8'
+
+# Define common volumes using an extension field
+x-app-volumes: &app-volumes
+  - ./thiskb:/app/thiskb
+  - ./documents:/app/documents
+  - ./knowledge_bases:/app/knowledge_bases
+  - ./templates:/app/templates
+  - ./users:/app/users
+  - ./tenants:/app/tenants
+  - ./dashboard:/app/dashboard
 
 services:
   web:
     build:
       context: .
       dockerfile: dev.Dockerfile
-    volumes:
-      - .:/app
+    volumes: *app-volumes
     ports:
       - "8000:8000"
     depends_on:
       - db
-      - redis
       - minio
       - mailhog
     environment:
       - DEBUG=true 
       - DATABASE_URL=postgres://postgres:password@db:5432/thiskb
       - RUN_MIGRATION=true
-      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=amqp://kb-user:strongpassword123@rabbitmq:5672/kb-vhost
       - S3_BUCKET=thiskb
       - S3_ENDPOINT=http://minio:9000
       - S3_ACCESS_KEY=minioadmin
@@ -35,43 +42,53 @@ services:
     networks:
       - thiskb_network
 
-  # celery:
-  #   build:
-  #     context: .
-  #     dockerfile: dev.Dockerfile
-  #   volumes:
-  #     - .:/app
-  #   depends_on:
-  #     - web
-  #     - redis
-  #   environment:
-  #     - DATABASE_URL=postgres://postgres:password@db:5432/thiskb
-  #     - REDIS_URL=redis://redis:6379/0
-  #     - S3_BUCKET=thiskb
-  #     - S3_ENDPOINT=http://minio:9000
-  #     - S3_ACCESS_KEY=minioadmin
-  #     - S3_SECRET_KEY=minioadmin
-  #   command: celery -A thiskb worker --loglevel=info
-  #   networks:
-  #     - thiskb_network
+  celery:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes: *app-volumes
+    depends_on:
+      - db
+      - web
+      - rabbitmq
+      - minio
+      - mailhog
+    environment:
+      - DEBUG=true 
+      - DATABASE_URL=postgres://postgres:password@db:5432/thiskb
+      - CELERY_BROKER_URL=amqp://kb-user:strongpassword123@rabbitmq:5672/kb-vhost
+      - S3_BUCKET=thiskb
+      - S3_ENDPOINT=http://minio:9000
+      - S3_ACCESS_KEY=minioadmin
+      - S3_SECRET_KEY=minioadmin
+      # Email configuration
+      - EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+      - EMAIL_HOST=mailhog
+      - EMAIL_PORT=1025
+      - EMAIL_HOST_USER=
+      - EMAIL_HOST_PASSWORD=
+      - EMAIL_USE_TLS=False
+      - DEFAULT_FROM_EMAIL=noreply@thiskb.local
+    command: celery -A thiskb worker --loglevel=info
+    networks:
+      - thiskb_network
 
   # celery-beat:
   #   build:
   #     context: .
   #     dockerfile: dev.Dockerfile
-  #   volumes:
-  #     - .:/app
+  #   volumes: *app-volumes
   #   depends_on:
   #     - web
-  #     - redis
+  #     - rabbitmq
   #   environment:
   #     - DATABASE_URL=postgres://postgres:postgres@db:5432/thiskb
-  #     - REDIS_URL=redis://redis:6379/0
+  #     - CELERY_BROKER_URL=amqp://kb-user:strongpassword123@rabbitmq:5672/kb-vhost
   #     - S3_BUCKET=thiskb
   #     - S3_ENDPOINT=http://minio:9000
   #     - S3_ACCESS_KEY=minioadmin
   #     - S3_SECRET_KEY=minioadmin
-  #   command: celery -A thiskb beat --loglevel=info
+  #   command: uv run celery -A thiskb beat --loglevel=info
   #   networks:
   #     - thiskb_network
 
@@ -83,17 +100,31 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=thiskb
-    ports:
-      - "5432:5432"
+    # ports:
+      # - "5432:5432"
     networks:
       - thiskb_network
 
-  redis:
-    image: valkey/valkey:8-alpine
+  # redis:
+  #   image: valkey/valkey:8-alpine
+  #   # ports:
+  #   #   - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - thiskb_network
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_VHOST: kb-vhost
+      RABBITMQ_DEFAULT_USER: kb-user
+      RABBITMQ_DEFAULT_PASS: strongpassword123
     ports:
-      - "6379:6379"
+      # - "5672:5672"
+      - "15672:15672"
     volumes:
-      - redis_data:/data
+      - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - thiskb_network
 
@@ -129,7 +160,7 @@ services:
   mailhog:
     image: mailhog/mailhog
     ports:
-      - "1025:1025"  # SMTP server
+      # - "1025:1025"  # SMTP server
       - "8025:8025"  # Web UI
     networks:
       - thiskb_network
@@ -140,5 +171,5 @@ networks:
 
 volumes:
   postgres_data:
-  redis_data:
+  rabbitmq_data:
   minio_data:

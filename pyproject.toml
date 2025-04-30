@@ -27,6 +27,9 @@ dependencies = [
     "whitenoise==6.8.2",
     "magika==0.5.1",
     "django-storages[s3]>=1.14.5",
+    "extractous>=0.3.0",
+    "chonkie[semantic]>=0.5.1",
+    "tiktoken>=0.9.0",
 ]
 
 [dependency-groups]
