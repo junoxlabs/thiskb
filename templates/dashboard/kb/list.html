@@ -25,13 +25,15 @@
 <div class="uk-grid uk-child-width-1-3@m" uk-grid>
     {% for kb in knowledge_bases %}
     <div>
-        <div class="uk-card uk-card-default uk-card-body">
-            <h3 class="uk-card-title">{{ kb.name }}</h3>
+        <div class="uk-card uk-card-default uk-card-body uk-card-small">
+            <h3 class="uk-card-title">
+                <a href="{% url 'dashboard:knowledge-base-detail' kb.id %}">
+                    {{ kb.name }}
+                </a>
+            </h3>
             <p>{{ kb.description|truncatewords:30 }}</p>
-            <a href="{% url 'dashboard:knowledge-base-detail' kb.id %}"
-                class="uk-margin-bottom uk-button uk-button-primary uk-button-small">View</a>
             <div class="uk-text-meta">
-                Created on {{ kb.created_at|date:"M d, Y" }}
+                {{ kb.created_at|date:"M d, Y" }}
             </div>
         </div>
     </div>

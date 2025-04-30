@@ -226,10 +226,10 @@ class DocumentCreateView(DashboardBaseView, TemplateView):
             document: Document model instance
             stored_path: Path where the file is stored in S3/storage
         """
-        from documents.tasks import process_document_task
+        from documents.tasks import extract_document
 
         # Schedule document processing task using the document's ID
-        process_document_task.delay(document_id=document.id, stored_path=stored_path)
+        extract_document.delay(document_id=document.id, stored_path=stored_path)
 
         # Update document with scheduled status
         document.chunking_status = DocumentChunkingStatus.SCHEDULED
@@ -254,6 +254,8 @@ class DocumentCreateView(DashboardBaseView, TemplateView):
                     request, f"Unsupported document type: {file_info['mime_type']}"
                 )
                 continue
+
+            # TODO: get file size and check if it is too large
 
             # Create document instance
             try:

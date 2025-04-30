@@ -13,12 +13,12 @@
         </div>
     </div>
 
-    <div class="uk-margin">
+    <div class="uk-margin-small-top">
         <p class="uk-text-muted">{{ knowledge_base.description }}</p>
     </div>
 
     <!-- Documents List -->
-    <div class="uk-margin-large-top">
+    <div class="uk-margin-small-top">
         <h3>Documents</h3>
 
         {% if documents %}
@@ -26,14 +26,19 @@
             {% for doc in documents %}
             <div>
                 <div class="uk-card uk-card-default uk-card-body uk-card-small">
-                    <h4 class="uk-card-title">{{ doc.name }}</h4>
+                    <h4 class="uk-card-title">
+                        <a href="{% url 'dashboard:knowledge-base-detail' doc.id %}">
+                            {{ doc.name }}
+                        </a>
+                    </h4>
                     <div class="uk-text-meta">
                         Size: {{ doc.file_size|filesizeformat }}<br>
                         Type: {{ doc.content_type }}<br>
-                        Chunks: {{ doc.total_chunks }}
+                        Chunks: {{ doc.total_chunks }}<br>
+                        Status: {{ doc.chunking_status }}
                     </div>
                     <div class="uk-margin-small-top">
-                        <span class="uk-text-meta">Added {{ doc.created_at|timesince }} ago</span>
+                        <span class="uk-text-meta">{{ doc.created_at|timesince }} ago</span>
                     </div>
                 </div>
             </div>
