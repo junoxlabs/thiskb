@@ -21,6 +21,7 @@ class Document(models.Model):
     chunking_error = models.TextField(null=True)
     total_chunks = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -34,13 +35,17 @@ class Chunk(models.Model):
     tenant = models.ForeignKey("tenants.Tenant", on_delete=models.CASCADE)
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
     kb = models.ForeignKey("knowledge_bases.KnowledgeBase", on_delete=models.CASCADE)
-    content = models.TextField(null=False)
-    embedding = VectorField(null=False, dimensions=1536)
-    chunk_number = models.IntegerField(null=False)
+    content = models.TextField(null=False, max_length=5000)
+    embedding = VectorField(null=True, dimensions=1536)
+    chunk_number = models.IntegerField(null=False, default=0)
+    token_count = models.IntegerField(null=False, default=0)
+    character_count = models.IntegerField(null=False, default=0)
+    metadata = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Chunk {self.chunk_number} of Document {self.document.name}"
+        return f"Chunk {self.chunk_number}/{self.document.total_chunks} of Document {self.document.name}"
 
     class Meta:
         indexes = [
