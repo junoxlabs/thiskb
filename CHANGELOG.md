@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.0](https://github.com/junoxlabs/thiskb/compare/v0.3.0...v0.4.0) (2025-05-01)
+
+
+### Features
+
+* document -&gt; s3, scheduled, status enums ([e1dcd6f](https://github.com/junoxlabs/thiskb/commit/e1dcd6f9f197aa62a7734b57dc1699122f105d00))
+* document upload working flow ([a8d082d](https://github.com/junoxlabs/thiskb/commit/a8d082d3c4db758c18b4f5b492d333767d33dce9))
+* upgrade django 5.2; django-celery-beat 2.8.0 ([fdda859](https://github.com/junoxlabs/thiskb/commit/fdda859e513d2fa9edba1e04254035f8d495f887))
+* use docker compose for dev ([49bc354](https://github.com/junoxlabs/thiskb/commit/49bc35485603e75de6d799c60755fece98ac8e4f))
+* working extraction, chunking w/ celery ([4fef4fe](https://github.com/junoxlabs/thiskb/commit/4fef4fe15166030a28d05af3267fe7acccae7c8a))
+
+
+### Bug Fixes
+
+* docker dev build ([3c523dc](https://github.com/junoxlabs/thiskb/commit/3c523dc6fb24af1bbcd19754b42c782af01e0202))
+* use valkey instead of redis ([045847a](https://github.com/junoxlabs/thiskb/commit/045847a494ac08592f9aea2c35662a30ef7a3022))
+
 ## [0.3.0](https://github.com/fivehanz/thiskb/compare/v0.2.0...v0.3.0) (2025-03-17)
 
 
